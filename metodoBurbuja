@@ -1,0 +1,84 @@
+#!/bin/bash
+
+declare -a arreglo
+tamaño=0
+
+function llenarManualmente() {
+    read -p "Ingrese el tamaño del arreglo: " tamaño
+
+    for ((i=0; i<tamaño; i++)); do
+        echo -n "Ingrese el valor para la posición $i: "
+        read entrada
+        arreglo[$i]=$entrada
+    done
+}
+
+function llenarAleatoriamente() {
+    for ((i=0; i<tamaño; i++)); do
+        arreglo[$i]=$((RANDOM % 100))
+    done
+}
+
+function ordenarBurbuja() {
+    local n=$tamaño
+    local intercambiado
+
+    while true; do
+        intercambiado=false
+
+        for ((i=1; i<n; i++)); do
+            if [[ ${arreglo[i-1]} -gt ${arreglo[i]} ]]; then
+                local temp=${arreglo[i-1]}
+                arreglo[i-1]=${arreglo[i]}
+                arreglo[i]=$temp
+                intercambiado=true
+            fi
+        done
+
+        ((n--))
+        if ! $intercambiado; then
+            break
+        fi
+    done
+}
+
+function mostrarArreglo() {
+    echo "Arreglo Ordenado:"
+    for ((i=0; i<tamaño; i++)); do
+        echo -n "${arreglo[i]} "
+    done
+    echo
+}
+
+echo "Opciones:"
+echo "1. Llenar Manualmente"
+echo "2. Llenar Aleatoriamente"
+echo "3. Ordenar (Burbuja)"
+echo "4. Salir"
+
+while true; do
+    read -p "Seleccione una opción: " opcion
+
+    case $opcion in
+        1)
+            llenarManualmente
+            mostrarArreglo
+            ;;
+        2)
+            llenarAleatoriamente
+            mostrarArreglo
+            ;;
+        3)
+            ordenarBurbuja
+            mostrarArreglo
+            ;;
+        4)
+            echo "Saliendo del programa."
+            break
+            ;;
+        *)
+            echo "Opción no válida. Intente nuevamente."
+            ;;
+    esac
+done
+
